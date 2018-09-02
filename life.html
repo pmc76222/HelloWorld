@@ -24,12 +24,18 @@
             var start;
             var stop;
             var content = "";
+            var begin = [];
+            var end = [];
+            var story = [];
 
             //입력받기
             function receive(){
                 start = document.getElementById('start_input').value;
                 stop = document.getElementById('end_input').value;
                 content = document.getElementById('content_input').value;
+                begin.push(start);
+                end.push(stop);
+                story.push(content);
             }
 
             //1초마다 반복
@@ -41,6 +47,7 @@
                 drawTime(ctx,radius);
                 drawWork(ctx, radius);
             }
+
 
             //시계모양그리기
             function drawFace(ctx,radius){
@@ -66,8 +73,10 @@
                 ctx.fill();
             }
 
+
             //숫자적기
             function drawNumbers(ctx, radius) {
+
                 var ang;
                 var num;
                 ctx.font = radius*0.1 + "px arial";
@@ -83,7 +92,9 @@
                         ctx.translate(0, radius*0.85);
                         ctx.rotate(-ang);
                     }
+
             }
+
 
             //시간가져와 표시하기
             function drawTime(ctx, radius) {
@@ -95,16 +106,8 @@
                 //hour
                 hour = (hour * Math.PI/12) + (minute * Math.PI/(2*6*60)) + (second * Math.PI/(2*360*60));
                 drawHand(ctx, hour, radius*0.8, radius*0.02);
-                /*
-                drawHand(ctx, 8*Math.PI/12, radius, radius*0.01);
-                drawHand(ctx, 12*Math.PI/12, radius, radius*0.01);
-                drawHand(ctx, 13*Math.PI/12, radius, radius*0.01);
-                drawHand(ctx, 18*Math.PI/12, radius, radius*0.01);
-                drawHand(ctx, 19*Math.PI/12, radius, radius*0.01);
-                drawHand(ctx, 21*Math.PI/12, radius, radius*0.01);
-                drawHand(ctx, 24*Math.PI/12, radius, radius*0.01);
-                */
             }
+
 
             //시간표시하기
             function drawHand(ctx, pos, length, width) {
@@ -120,25 +123,28 @@
 
             //입력받은내용표시하기
             function drawText(ctx, radius) {
+                    var z = (Number((end[i]-begin[i])/2) + Number(begin[i])) * Math.PI / 12  ;
+                    ctx.font = radius*0.1 + "px arial";
+                    ctx.textBaseline = "middle";
+                    ctx.textAlign = "center";
+                    ctx.rotate(z);
+                    ctx.translate(0, -radius*0.5);
+                    ctx.rotate(-z);
+                    ctx.fillText(story[i], 0, 0);
+                    ctx.rotate(z);
+                    ctx.translate(0, radius*0.5);
+                    ctx.rotate(-z);
 
-                var z = (Number((stop-start)/2) + Number(start)) * Math.PI / 12  ;
-                ctx.font = radius*0.1 + "px arial";
-                ctx.textBaseline = "middle";
-                ctx.textAlign = "center";
-                ctx.rotate(z);
-                ctx.translate(0, -radius*0.5);
-                ctx.rotate(-z);
-                ctx.fillText(content, 0, 0);
-                ctx.rotate(z);
-                ctx.translate(0, radius*0.5);
-                ctx.rotate(-z);
             }
 
             //입력받은시간표시하고 내용표시하기
+
             function drawWork (ctx, radius) {
-                drawHand(ctx, start * Math.PI/12, radius , radius*0.01);
-                drawHand(ctx, stop * Math.PI/12, radius , radius*0.01);
-                drawText(ctx, radius);
+                for ( i=0; i<begin.length; i++){
+                    drawHand(ctx, begin[i] * Math.PI/12, radius , radius*0.01);
+                    drawHand(ctx, end[i] * Math.PI/12, radius , radius*0.01);
+                    drawText(ctx, radius);
+                }
             }
 
 
